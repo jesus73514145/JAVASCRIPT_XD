@@ -2,7 +2,7 @@
 Proyecto de prueba de javascript 30052024
 
 ## PREGUNTA 1
-![alt text](image.png)
+![alt text](preg1.jpeg)
 
 ## PREGUNTA 2
-![alt text](image-1.png)
+![alt text](preg2.jpeg)
