@@ -1,0 +1,203 @@
+@{
+    ViewData["Title"] = "Pregunta 2";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedido de Salchipapa</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-top: 10px;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        button {
+            width: 48%;
+            padding: 15px;
+            background: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        #clear-button {
+            background: #dc3545;
+        }
+        #clear-button:hover {
+            background: #c82333;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e9ecef;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .error {
+            color: red;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Pedido de Salchipapa</h1>
+        <form id="pedidoForm">
+            <label for="tipo">Tipo de Salchipapa:</label>
+            <select id="tipo" required>
+                <option value="">Seleccionar</option>
+                <option value="Clasica">Clásica</option>
+                <option value="Mixta">Mixta</option>
+                <option value="Revuelta">Revuelta</option>
+            </select>
+            <div id="error-tipo" class="error"></div>
+
+            <label for="cantidad">Cantidad de Platos:</label>
+            <input type="number" id="cantidad" min="1" required>
+            <div id="error-cantidad" class="error"></div>
+
+            <label for="distrito">Distrito:</label>
+            <select id="distrito" required>
+                <option value="">Seleccionar</option>
+                <option value="Breña">Breña</option>
+                <option value="Jesus Maria">Jesús María</option>
+                <option value="Lince">Lince</option>
+                <option value="Otro">Otro</option>
+            </select>
+            <div id="error-distrito" class="error"></div>
+
+            <div class="button-container">
+                <button type="button" onclick="calcularPedido()">Calcular</button>
+                <button type="button" id="clear-button" onclick="limpiarFormulario()">Limpiar</button>
+            </div>
+        </form>
+
+        <div id="result"></div>
+        <br>
+        <a href="/" class="back-link">Volver a la Página Principal</a>
+    </div>
+    <script>
+        function calcularPedido() {
+            // Limpiar mensajes de error previos
+            document.querySelectorAll('.error').forEach(el => el.textContent = '');
+
+            // Obtener datos del formulario
+            const tipo = document.getElementById('tipo').value;
+            const cantidad = parseInt(document.getElementById('cantidad').value);
+            const distrito = document.getElementById('distrito').value;
+
+            // Validar los datos
+            let valid = true;
+
+            if (!tipo) {
+                document.getElementById('error-tipo').textContent = "Falta seleccionar el tipo de salchipapa";
+                valid = false;
+            }
+            if (isNaN(cantidad) || cantidad <= 0) {
+                document.getElementById('error-cantidad').textContent = "Falta ingresar una cantidad válida de platos";
+                valid = false;
+            }
+            if (!distrito) {
+                document.getElementById('error-distrito').textContent = "Falta seleccionar el distrito";
+                valid = false;
+            }
+
+            if (!valid) {
+                document.getElementById('result').textContent = "Hay errores en el formulario, por favor corríjalos.";
+                return;
+            }
+
+            // Precios por tipo de salchipapa
+            const precios = {
+                'Clasica': 13.00,
+                'Mixta': 15.00,
+                'Revuelta': 18.00
+            };
+
+            // Obtener el precio del tipo seleccionado
+            const precioUnitario = precios[tipo];
+
+            // Calcular el monto parcial
+            const montoParcial = precioUnitario * cantidad;
+
+            // Calcular el descuento
+            let porcentajeDescuento = 0;
+            if (['Breña', 'Jesus Maria', 'Lince'].includes(distrito)) {
+                if (cantidad >= 5 && cantidad <= 12) {
+                    porcentajeDescuento = 5;
+                } else if (cantidad >= 13 && cantidad <= 24) {
+                    porcentajeDescuento = 10;
+                } else if (cantidad > 24) {
+                    porcentajeDescuento = 12;
+                }
+            }
+
+            const montoDescuento = (montoParcial * porcentajeDescuento) / 100;
+            const montoTotal = montoParcial - montoDescuento;
+
+            // Mostrar resultados
+            let resultado = `<h2>Resultados</h2>`;
+            resultado += `<p><strong>Tipo de Salchipapa:</strong> ${tipo}</p>`;
+            resultado += `<p><strong>Cantidad de Platos:</strong> ${cantidad}</p>`;
+            resultado += `<p><strong>Distrito:</strong> ${distrito}</p>`;
+            resultado += `<p><strong>Precio Unitario:</strong> S/ ${precioUnitario.toFixed(2)}</p>`;
+            resultado += `<p><strong>Monto Parcial:</strong> S/ ${montoParcial.toFixed(2)}</p>`;
+            resultado += `<p><strong>Descuento:</strong> ${porcentajeDescuento}%</p>`;
+            resultado += `<p><strong>Monto de Descuento:</strong> S/ ${montoDescuento.toFixed(2)}</p>`;
+            resultado += `<p><strong>Monto Total:</strong> S/ ${montoTotal.toFixed(2)}</p>`;
+
+            document.getElementById('result').innerHTML = resultado;
+        }
+
+        function limpiarFormulario() {
+            // Restablecer el formulario
+            document.getElementById('pedidoForm').reset();
+            
+            // Limpiar mensajes de error y resultados
+            document.querySelectorAll('.error').forEach(el => el.textContent = '');
+            document.getElementById('result').textContent = '';
+        }
+    </script>
+</body>
+</html>

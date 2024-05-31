@@ -1,0 +1,308 @@
+@{
+    ViewData["Title"] = "Pregunta 1";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Concurso Docente</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #333;
+        }
+        .form-container {
+            display: flex;
+            justify-content: space-between;
+        }
+        .form-container form {
+            width: 48%;
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        button {
+            width: 48%;
+            padding: 15px;
+            background: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #218838;
+        }
+        #clear-button {
+            background: #dc3545;
+        }
+        #clear-button:hover {
+            background: #c82333;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e9ecef;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .puntaje-detalle {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #555;
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Concurso Docente</h1>
+        <div class="form-container">
+            <form id="form1">
+                <h2>Candidato 1</h2>
+                <label for="name1">Nombre:</label>
+                <input type="text" id="name1" required>
+                <div id="error-name1" class="error"></div>
+                
+                <label for="grado1">Grado Académico:</label>
+                <select id="grado1" required>
+                    <option value="">Seleccionar</option>
+                    <option value="Licenciado">Licenciado</option>
+                    <option value="Magíster">Magíster</option>
+                    <option value="Doctor">Doctor</option>
+                </select>
+                <div id="error-grado1" class="error"></div>
+                
+                <label for="publicaciones1">Número de Publicaciones:</label>
+                <input type="number" id="publicaciones1" min="0" required>
+                <div id="error-publicaciones1" class="error"></div>
+                
+                <label for="ingles1">Nivel de Inglés:</label>
+                <select id="ingles1" required>
+                    <option value="">Seleccionar</option>
+                    <option value="Básico">Básico</option>
+                    <option value="Intermedio">Intermedio</option>
+                    <option value="Avanzado">Avanzado</option>
+                </select>
+                <div id="error-ingles1" class="error"></div>
+            </form>
+            
+            <form id="form2">
+                <h2>Candidato 2</h2>
+                <label for="name2">Nombre:</label>
+                <input type="text" id="name2" required>
+                <div id="error-name2" class="error"></div>
+                
+                <label for="grado2">Grado Académico:</label>
+                <select id="grado2" required>
+                    <option value="">Seleccionar</option>
+                    <option value="Licenciado">Licenciado</option>
+                    <option value="Magíster">Magíster</option>
+                    <option value="Doctor">Doctor</option>
+                </select>
+                <div id="error-grado2" class="error"></div>
+                
+                <label for="publicaciones2">Número de Publicaciones:</label>
+                <input type="number" id="publicaciones2" min="0" required>
+                <div id="error-publicaciones2" class="error"></div>
+                
+                <label for="ingles2">Nivel de Inglés:</label>
+                <select id="ingles2" required>
+                    <option value="">Seleccionar</option>
+                    <option value="Básico">Básico</option>
+                    <option value="Intermedio">Intermedio</option>
+                    <option value="Avanzado">Avanzado</option>
+                </select>
+                <div id="error-ingles2" class="error"></div>
+            </form>
+        </div>
+        
+        <div class="button-container">
+            <button onclick="calcularPuntajes()">Calcular Puntajes</button>
+            <button id="clear-button" onclick="limpiarFormularios()">Limpiar</button>
+        </div>
+        
+        <div id="result"></div>
+        <br>
+        <a href="/" class="back-link">Volver a la Página Principal</a>
+    </div>
+
+    <script>
+        function calcularPuntajes() {
+            // Limpiar mensajes de error previos
+            document.querySelectorAll('.error').forEach(el => el.textContent = '');
+
+            // Obtener datos de los formularios
+            const name1 = document.getElementById('name1').value;
+            const grado1 = document.getElementById('grado1').value;
+            const publicaciones1 = parseInt(document.getElementById('publicaciones1').value);
+            const ingles1 = document.getElementById('ingles1').value;
+
+            const name2 = document.getElementById('name2').value;
+            const grado2 = document.getElementById('grado2').value;
+            const publicaciones2 = parseInt(document.getElementById('publicaciones2').value);
+            const ingles2 = document.getElementById('ingles2').value;
+
+            // Validar los datos
+            let valid = true;
+
+            if (!name1) {
+                document.getElementById('error-name1').textContent = "Falta nombre del Candidato 1";
+                valid = false;
+            }
+            if (!grado1) {
+                document.getElementById('error-grado1').textContent = "Falta seleccionar el grado académico del Candidato 1";
+                valid = false;
+            }
+            if (isNaN(publicaciones1)) {
+                document.getElementById('error-publicaciones1').textContent = "Falta número de publicaciones del Candidato 1";
+                valid = false;
+            }
+            if (!ingles1) {
+                document.getElementById('error-ingles1').textContent = "Falta seleccionar el nivel de inglés del Candidato 1";
+                valid = false;
+            }
+
+            if (!name2) {
+                document.getElementById('error-name2').textContent = "Falta nombre del Candidato 2";
+                valid = false;
+            }
+            if (!grado2) {
+                document.getElementById('error-grado2').textContent = "Falta seleccionar el grado académico del Candidato 2";
+                valid = false;
+            }
+            if (isNaN(publicaciones2)) {
+                document.getElementById('error-publicaciones2').textContent = "Falta número de publicaciones del Candidato 2";
+                valid = false;
+            }
+            if (!ingles2) {
+                document.getElementById('error-ingles2').textContent = "Falta seleccionar el nivel de inglés del Candidato 2";
+                valid = false;
+            }
+
+            if (!valid) {
+                document.getElementById('result').textContent = "Hay errores en el formulario, por favor corríjalos.";
+                return;
+            }
+
+            // Función para calcular el puntaje
+            function calcularPuntaje(grado, publicaciones, ingles) {
+                let puntaje = 0;
+                let detalle = "";
+
+                switch (grado) {
+                    case "Licenciado":
+                        puntaje += 7;
+                        detalle += "Grado Académico (Licenciado): 7 puntos\n";
+                        break;
+                    case "Magíster":
+                        puntaje += 14;
+                        detalle += "Grado Académico (Magíster): 14 puntos\n";
+                        break;
+                    case "Doctor":
+                        puntaje += 21;
+                        detalle += "Grado Académico (Doctor): 21 puntos\n";
+                        break;
+                }
+
+                if (publicaciones < 5) {
+                    puntaje += 4;
+                    detalle += "Publicaciones (< 5): 4 puntos\n";
+                } else if (publicaciones <= 10) {
+                    puntaje += 8;
+                    detalle += "Publicaciones (5-10): 8 puntos\n";
+                } else {
+                    puntaje += 12;
+                    detalle += "Publicaciones (> 10): 12 puntos\n";
+                }
+
+                switch (ingles) {
+                    case "Básico":
+                        puntaje += 6;
+                        detalle += "Nivel de Inglés (Básico): 6 puntos\n";
+                        break;
+                    case "Intermedio":
+                        puntaje += 11;
+                        detalle += "Nivel de Inglés (Intermedio): 11 puntos\n";
+                        break;
+                    case "Avanzado":
+                        puntaje += 18;
+                        detalle += "Nivel de Inglés (Avanzado): 18 puntos\n";
+                        break;
+                }
+
+                return { puntaje, detalle };
+            }
+
+            // Calcular puntajes
+            const resultado1 = calcularPuntaje(grado1, publicaciones1, ingles1);
+            const resultado2 = calcularPuntaje(grado2, publicaciones2, ingles2);
+
+            // Determinar el ganador
+            let resultado = `<h2>Puntajes Detallados</h2>`;
+            resultado += `<h3>${name1}</h3><pre>${resultado1.detalle}</pre><strong>Total: ${resultado1.puntaje} puntos</strong>`;
+            resultado += `<h3>${name2}</h3><pre>${resultado2.detalle}</pre><strong>Total: ${resultado2.puntaje} puntos</strong>`;
+
+            if (resultado1.puntaje > resultado2.puntaje) {
+                resultado += `<h2>El ganador es ${name1} con ${resultado1.puntaje} puntos.</h2>`;
+            } else if (resultado2.puntaje > resultado1.puntaje) {
+                resultado += `<h2>El ganador es ${name2} con ${resultado2.puntaje} puntos.</h2>`;
+            } else {
+                resultado += `<h2>Empate</h2>`;
+            }
+
+            // Mostrar resultado
+            document.getElementById('result').innerHTML = resultado;
+        }
+
+        function limpiarFormularios() {
+            // Restablecer los formularios
+            document.getElementById('form1').reset();
+            document.getElementById('form2').reset();
+            
+            // Limpiar mensajes de error y resultados
+            document.querySelectorAll('.error').forEach(el => el.textContent = '');
+            document.getElementById('result').textContent = '';
+        }
+    </script>
+</body>
+</html>
